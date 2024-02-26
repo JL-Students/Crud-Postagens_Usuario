@@ -9,6 +9,4 @@ import com.jlstudents.crudpostagensusuario.entities.Usuario;
 
 public interface PostagemRepository extends JpaRepository<Postagem, Integer> {
 	
-	List<Postagem> findByUsuario(Usuario usuario);
-
 }

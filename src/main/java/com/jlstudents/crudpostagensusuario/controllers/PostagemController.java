@@ -41,13 +41,6 @@ public class PostagemController {
 		return ResponseEntity.ok().body(postagem);
 	}
 	
-	@GetMapping(value = "/{usuarioId}")
-	@Operation(summary = "Obtém todas as postagens realizadas por um usuário específico no sistema.")
-	public ResponseEntity<List<Postagem>> findByUsuario(@PathVariable Integer usuarioId) {
-		List<Postagem> postagens = postagemService.findByUsuario(usuarioId);
-		return ResponseEntity.ok().body(postagens);
-	}
-	
 	@PostMapping
 	@Operation(summary = "Realiza o cadastro de um nova postagem no sistema.")
 	public ResponseEntity<Postagem> insert(@RequestBody Postagem novaPostagem) {

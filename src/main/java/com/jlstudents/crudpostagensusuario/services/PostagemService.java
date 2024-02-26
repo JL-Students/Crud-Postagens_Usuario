@@ -39,16 +39,6 @@ public class PostagemService {
 		return listaPostagens;
 	}
 	
-	public List<Postagem> findByUsuario(Integer usuarioId) {
-		Usuario usuario = usuarioService.findById(usuarioId);
-		List<Postagem> listaPostagens = postagemRepository.findByUsuario(usuario);
-		if (listaPostagens == null || listaPostagens.isEmpty()) {
-			throw new EntidadeNaoEncontradaException("Nenhuma postagem foi encontrado na base de dados do sistema associada ao usuário de Id " + usuarioId);
-		}
-		listaPostagens.sort((obj1, obj2) -> Integer.compare(obj1.getId(), obj2.getId()));
-		return listaPostagens;
-	}
-	
 	public Postagem findById(Integer id) {
 		Optional<Postagem> postagem = postagemRepository.findById(id);		
 		return postagem.orElseThrow(() -> new EntidadeNaoEncontradaException("Postagem não se encontra cadastrado na base de dados do sistema.", id));
@@ -71,7 +61,7 @@ public class PostagemService {
 	private void validateUser(Postagem postagem) {
 		Usuario usuario = usuarioService.findByEmail(postagem.getUsuario().getEmail());
 		if (usuario == null) {
-			usuario = usuarioService.insert(usuario);
+			usuario = usuarioService.insert(postagem.getUsuario());
 		}
 		postagem.setUsuario(usuario);
 	}
@@ -79,7 +69,7 @@ public class PostagemService {
 	private void validateTema(Postagem postagem) {
 		Tema tema = temaService.findByDescricao(postagem.getTema().getDescricao());
 		if (tema == null) {
-			tema = temaService.insert(tema);
+			tema = temaService.insert(postagem.getTema());
 		}
 		postagem.setTema(tema);
 	}
