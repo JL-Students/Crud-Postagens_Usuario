@@ -1,9 +1,11 @@
-package com.jlstudents.crudpostagensusuario.entidades;
+package com.jlstudents.crudpostagensusuario.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
@@ -13,6 +15,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table( name = "Tema" )
@@ -26,9 +30,12 @@ public class Tema implements Serializable {
     @Schema(hidden = true)
     private Integer id;
 	
+	@NotNull(message = "O campo descrição é obrigatório")
+	@Size(min = 3, message = "A descrição deve ter no mínimo 3 caracteres")
     @Column(name = "descricao", nullable = false)
 	private String descricao;
     
+	@JsonIgnore
     @OneToMany(mappedBy = "tema")
     private List<Postagem> postagens = new ArrayList<>();
 	

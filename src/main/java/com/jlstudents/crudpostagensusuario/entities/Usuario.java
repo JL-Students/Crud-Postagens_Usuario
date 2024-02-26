@@ -1,9 +1,11 @@
-package com.jlstudents.crudpostagensusuario.entidades;
+package com.jlstudents.crudpostagensusuario.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
@@ -13,6 +15,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table( name = "Usuario" )
@@ -26,12 +31,21 @@ public class Usuario implements Serializable {
     @Schema(hidden = true)
     private Integer id;
 	
+	@NotNull(message = "O campo nome é obrigatório")
+	@Size(min = 3, max = 100, message = "O nome deve ser ter no mínimo 3 e no máximo 100 caracteres")
     @Column(name = "nome", nullable = false)
 	private String nome;
 	
-    @Column(name = "email", nullable = false)
+    @NotNull(message = "O campo email é obrigatório")
+    @Email(message = "Email informado está inválido, favor informe um email corretamente")
+    @Column(name = "email", nullable = false, unique = true)
 	private String email;
     
+    @JsonIgnore
+    @Column(name = "foto", nullable = true, columnDefinition = "text")
+    private String foto;
+    
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<Postagem> postagens = new ArrayList<>();
 	    
@@ -69,6 +83,14 @@ public class Usuario implements Serializable {
 
 	public void setPostagens(List<Postagem> postagens) {
 		this.postagens = postagens;
+	}
+	
+	public String getFoto() {
+		return foto;
+	}
+	
+	public void setFoto(String foto) {
+		this.foto = foto;
 	}
 
 	@Override
